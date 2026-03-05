@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
-import { Menu, X, Leaf, Calendar } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { Menu, X, Leaf, Calendar } from "lucide-react";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,28 +14,27 @@ export default function Navbar() {
   const backgroundColor = useTransform(
     scrollY,
     [0, 50],
-    ['rgba(248, 247, 245, 0)', 'rgba(248, 247, 245, 0.8)']
+    ["rgba(248, 247, 245, 0)", "rgba(248, 247, 245, 0.8)"],
   );
   const borderOpacity = useTransform(scrollY, [0, 50], [0, 0.1]);
 
   return (
     <motion.header
-      style={{ backgroundColor, borderBottom: `1px solid rgba(244, 168, 37, ${borderOpacity.get()})` }}
+      style={{
+        backgroundColor,
+        borderBottom: `1px solid rgba(244, 168, 37, ${borderOpacity.get()})`,
+      }}
       className="sticky top-0 z-50 w-full backdrop-blur-md transition-all duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          <div className="flex items-center gap-3">
-            <div className="text-primary">
-              <Leaf className="w-8 h-8" />
-            </div>
-            <span className="text-xl font-extrabold tracking-tight text-slate-900">
-              GreenDog <span className="text-primary">Academy</span>
-            </span>
-          </div>
+          <span className="text-xl font-extrabold tracking-tight text-slate-900 sr-only">
+            GreenDog <span className="text-primary">Academy</span>
+          </span>
+          <img src="/logo.png" alt="GreenDog Academy" className="h-10 " />
 
           <nav className="hidden md:flex space-x-10">
-            {['Philosophy', 'Services', 'Facility', 'Insights'].map((item) => (
+            {["Philosophy", "Services", "Facility", "Insights"].map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
@@ -54,7 +53,11 @@ export default function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden text-slate-900"
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -63,11 +66,13 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <motion.div
         initial={false}
-        animate={isOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+        animate={
+          isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }
+        }
         className="md:hidden overflow-hidden bg-background-light border-b border-primary/10"
       >
         <div className="px-4 pt-2 pb-6 space-y-1">
-          {['Philosophy', 'Services', 'Facility', 'Insights'].map((item) => (
+          {["Philosophy", "Services", "Facility", "Insights"].map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
