@@ -14,7 +14,7 @@ export default function Hero() {
           style={{ y: y1 }}
           alt="Dog in motion"
           className="w-full h-full object-cover"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuATlepkm2ki1b9ngR6xsMv2xhKDKWuzwfTOV4JMJ506_YqmLJECMiHfk_4BmcSX2mTAb5hB9flWQUz4GvFqu9Vpy3ab8N1Tq4BXHci4aQpjqs_Vl2rSeaZPjUYOflUSqG7genKYgXIeEkhZda4PsJUO1xRYwvrrDNRski8smDNl-u6qUmkSs-2C_RQmRJdy8z6NrSjHk0OT99tXFGEB4EOzsDcBe-oN4u_j2mQMMiQFAOKA4dUMXhisDC8Riyr0AilY-lUKgc6Xhuae"
+          src="/image.png"
         />
         <video
           autoPlay
