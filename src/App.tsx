@@ -1,51 +1,34 @@
-import { motion, useScroll, useSpring } from "motion/react";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Stats from "./components/Stats";
-import Founder from "./components/Founder";
-import Services from "./components/Services";
-import Facility from "./components/Facility";
-import Comparison from "./components/Comparison";
-import Testimonials from "./components/Testimonials";
-import Insights from "./components/Insights";
-import FAQ from "./components/FAQ";
-import CTA from "./components/CTA";
 import Footer from "./components/Footer";
-import { MentorsNotes } from "./components/MentorsNotes";
+import Home from "./pages/Home";
+import Gallery from "./pages/Gallery";
+import Team from "./pages/Team";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import ScrollToTop from "./components/ScrollToTop";
+import { ContactProvider } from "./context/ContactProvider";
+import Legal from "./pages/Legal";
+import Map from "./components/Map";
 
 export default function App() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
   return (
-    <div className="relative">
-      {/* Progress Bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-primary z-[60] origin-left"
-        style={{ scaleX }}
-      />
+    <ContactProvider>
+      <div className="relative">
+        <ScrollToTop />
+        <Navbar />
 
-      <Navbar />
-
-      <main>
-        <Hero />
-        <Stats />
-        <Founder />
-        <Services />
-        <Facility />
-        <Comparison />
-        <Testimonials />
-        <MentorsNotes />
-        <Insights />
-        <FAQ />
-        <CTA />
-      </main>
-
-      <Footer />
-    </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/legal/:slug" element={<Legal />} />
+        </Routes>
+        <Map />
+        <Footer />
+      </div>
+    </ContactProvider>
   );
 }

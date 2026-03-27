@@ -86,16 +86,16 @@ export function MentorsNotes() {
   }, [selectedNote]);
 
   return (
-    <section className="py-24 bg-stone-50 overflow-hidden relative">
+    <section className="relative py-24 overflow-hidden bg-stone-50">
       {" "}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="relative px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         {" "}
-        <div className="text-center mb-16">
+        <div className="mb-16 text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl font-extrabold mb-4"
+            className="mb-4 text-4xl font-extrabold"
           >
             Notes from my Mentors
           </motion.h2>
@@ -104,15 +104,14 @@ export function MentorsNotes() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-slate-600 hidden"
+            className="hidden text-slate-600"
           ></motion.p>{" "}
         </div>
-        ```
         <div className="relative">
           <button
             onClick={prev}
             aria-label="Previous notes"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-12 z-10 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors"
+            className="absolute left-0 z-10 flex items-center justify-center w-12 h-12 transition-colors -translate-x-4 -translate-y-1/2 bg-white rounded-full shadow-md top-1/2 lg:-translate-x-12 text-slate-600 hover:text-primary hover:bg-slate-50"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -120,12 +119,12 @@ export function MentorsNotes() {
           <button
             onClick={next}
             aria-label="Next notes"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-12 z-10 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors"
+            className="absolute right-0 z-10 flex items-center justify-center w-12 h-12 transition-colors translate-x-4 -translate-y-1/2 bg-white rounded-full shadow-md top-1/2 lg:translate-x-12 text-slate-600 hover:text-primary hover:bg-slate-50"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
 
-          <div className="overflow-hidden px-2 py-8 -mx-2 -my-8">
+          <div className="px-2 py-8 -mx-2 -my-8 overflow-hidden">
             <motion.div
               className="flex gap-6 cursor-grab active:cursor-grabbing"
               drag="x"
@@ -161,7 +160,7 @@ export function MentorsNotes() {
                       </div>
 
                       <div
-                        className="relative w-full flex-grow flex items-center justify-center"
+                        className="relative flex items-center justify-center flex-grow w-full"
                         style={{
                           aspectRatio: `${note.dimW} / ${note.dimH}`,
                         }}
@@ -169,7 +168,7 @@ export function MentorsNotes() {
                         <img
                           src={`${imagekitBaseUrl}${note.image}?tr=f-auto,q-auto,w-800`}
                           alt={`Handwritten note from ${note.author}`}
-                          className="w-full h-full object-contain opacity-90 mix-blend-multiply"
+                          className="object-contain w-full h-full opacity-90 mix-blend-multiply"
                           draggable={false}
                           loading="lazy"
                         />
@@ -177,7 +176,7 @@ export function MentorsNotes() {
 
                       <button
                         onClick={() => setSelectedNote(note)}
-                        className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-slate-50 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                        className="absolute flex items-center justify-center w-10 h-10 transition-colors bg-white border rounded-full shadow-sm opacity-0 bottom-4 right-4 border-slate-100 text-slate-400 hover:text-primary hover:bg-slate-50 group-hover:opacity-100 focus:opacity-100"
                         aria-label={`Read note for ${note.author}`}
                       >
                         <FileText className="w-5 h-5" />
@@ -223,21 +222,21 @@ export function MentorsNotes() {
               onClick={() => setSelectedNote(null)}
               className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             />
-            <motion.div className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full p-8 z-10">
+            <motion.div className="relative z-10 w-full max-w-lg p-8 bg-white shadow-xl rounded-2xl">
               <button
                 onClick={() => setSelectedNote(null)}
-                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+                className="absolute p-2 transition-colors rounded-full top-4 right-4 text-slate-400 hover:text-slate-600 hover:bg-slate-100"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <h3 className="text-xl font-bold text-slate-900 mb-4">Note</h3>
+              <h3 className="mb-4 text-xl font-bold text-slate-900">Note</h3>
 
               <div className="prose prose-slate">
-                <blockquote className="text-lg text-slate-700 italic border-l-4 border-primary pl-4 my-6">
+                <blockquote className="pl-4 my-6 text-lg italic border-l-4 text-slate-700 border-primary">
                   "{selectedNote.quote}"
                 </blockquote>
-                <p className="text-right font-medium text-slate-900">
+                <p className="font-medium text-right text-slate-900">
                   — {selectedNote.author}
                 </p>
               </div>

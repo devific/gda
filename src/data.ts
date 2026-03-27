@@ -91,3 +91,75 @@ export const mentorsNotes = [
     dimH: 739,
   },
 ];
+
+export const stats = [
+  { label: "Dogs Trained", value: "1000+" },
+  { label: "Happy Parents", value: "500+" },
+  { label: "Years Experience", value: "10+" },
+  { label: "Google Rating", value: "4.9", isRating: true },
+];
+
+export const services = [
+  {
+    title: "Dog Boarding",
+    description:
+      "Luxury stays in a structured environment that maintains your dog's routine and peace of mind.",
+    icon: "Home",
+    link: "#",
+  },
+  {
+    title: "Dog Training",
+    description:
+      "From foundational obedience to behavioral modification through psychological insights.",
+    icon: "School",
+    link: "#",
+  },
+  {
+    title: "Play & Enrichment",
+    description:
+      "Structured socialization and mental stimulation activities designed for canine fulfillment.",
+    icon: "Brain",
+    link: "#",
+  },
+];
+
+export const comparisonFeatures = [
+  {
+    name: "Care Philosophy",
+    typical: "Containment based",
+    greendog: "Psychology & Leadership",
+  },
+  {
+    name: "Socialization",
+    typical: "Free-for-all chaos",
+    greendog: "Structured & Supervised",
+  },
+  {
+    name: "Staff Expertise",
+    typical: "General caretakers",
+    greendog: "Trained Behaviorists",
+  },
+  {
+    name: "Daily Routine",
+    typical: "Irregular exercise",
+    greendog: "Precision Schedule",
+  },
+];
+
+export const faqs = [
+  {
+    question: 'What is "Calm Leadership"?',
+    answer:
+      "Calm leadership is the practice of providing clear, consistent guidance without the need for shouting or physical force. It's about being a predictable and confident figure that your dog can trust and look to for direction.",
+  },
+  {
+    question: "Do you take aggressive dogs?",
+    answer:
+      "Yes, we specialize in behavioral modification. However, an initial consultation is mandatory to assess the severity and design a safe, effective training plan tailored to your dog's specific triggers.",
+  },
+  {
+    question: "What should I bring for boarding?",
+    answer:
+      "To maintain digestive health, we require owners to bring their dog's regular food. We provide elevated cots, fresh bedding, and all necessary enrichment tools. Personal toys are generally not required as we follow a strict hygiene protocol.",
+  },
+];
