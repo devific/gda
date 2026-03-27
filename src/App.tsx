@@ -1,23 +1,24 @@
-import { motion, useScroll, useSpring } from 'motion/react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Stats from './components/Stats';
-import Founder from './components/Founder';
-import Services from './components/Services';
-import Facility from './components/Facility';
-import Comparison from './components/Comparison';
-import Testimonials from './components/Testimonials';
-import Insights from './components/Insights';
-import FAQ from './components/FAQ';
-import CTA from './components/CTA';
-import Footer from './components/Footer';
+import { motion, useScroll, useSpring } from "motion/react";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Stats from "./components/Stats";
+import Founder from "./components/Founder";
+import Services from "./components/Services";
+import Facility from "./components/Facility";
+import Comparison from "./components/Comparison";
+import Testimonials from "./components/Testimonials";
+import Insights from "./components/Insights";
+import FAQ from "./components/FAQ";
+import CTA from "./components/CTA";
+import Footer from "./components/Footer";
+import { MentorsNotes } from "./components/MentorsNotes";
 
 export default function App() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
 
   return (
@@ -29,7 +30,7 @@ export default function App() {
       />
 
       <Navbar />
-      
+
       <main>
         <Hero />
         <Stats />
@@ -38,6 +39,7 @@ export default function App() {
         <Facility />
         <Comparison />
         <Testimonials />
+        <MentorsNotes />
         <Insights />
         <FAQ />
         <CTA />

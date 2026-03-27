@@ -1,39 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useAnimation } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const testimonials = [
-  {
-    id: 1,
-    text: "GreenDog Academy completely changed how we understand our dog. The calm leadership approach made our home peaceful again.",
-    name: "Aarav Mehta",
-  },
-  {
-    id: 2,
-    text: "The structured boarding is unlike anything else. I finally have peace of mind knowing my anxious rescue is in a calm, safe environment.",
-    name: "Sarah Jenkins",
-  },
-  {
-    id: 3,
-    text: "Shashank's philosophy is brilliant. We stopped treating symptoms and started addressing the root cause. Our Golden is a new dog.",
-    name: "David Thompson",
-  },
-  {
-    id: 4,
-    text: "I was skeptical about 'psychology-based' training, but the results speak for themselves. The staff is incredibly knowledgeable.",
-    name: "Elena Rodriguez",
-  },
-  {
-    id: 5,
-    text: "It's not just a facility; it's an education for both dogs and owners. The daily routine they established saved our sanity.",
-    name: "Michael Chen",
-  },
-  {
-    id: 6,
-    text: "Professional, clean, and truly caring. They don't just watch your dog; they actively improve their state of mind.",
-    name: "Jessica Taylor",
-  },
-];
+import { testimonials } from "../data";
 
 const trackItems = [...testimonials, ...testimonials, ...testimonials];
 
