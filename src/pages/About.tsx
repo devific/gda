@@ -117,7 +117,7 @@ export default function About() {
               viewport={{ once: true }}
               className="mb-4 text-4xl font-extrabold"
             >
-              The Journey & The Impact
+              The Journey
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -126,8 +126,8 @@ export default function About() {
               transition={{ delay: 0.2 }}
               className="max-w-2xl mx-auto text-slate-600"
             >
-              A collection of memories with mentors and heartfelt notes from the
-              families whose lives have been transformed.
+              A collection of memories and heartfelt notes of Shashank's
+              mentors.
             </motion.p>
           </div>
 
