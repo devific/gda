@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { motion } from "motion/react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { motion, useAnimation } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const testimonials = [
@@ -37,6 +37,48 @@ const testimonials = [
 
 const trackItems = [...testimonials, ...testimonials, ...testimonials];
 
+// Per-card name reveal controller
+function NameReveal({
+  name,
+  shouldAnimate,
+  staggerDelay,
+}: {
+  name: string;
+  shouldAnimate: boolean;
+  staggerDelay: number;
+}) {
+  const controls = useAnimation();
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    if (shouldAnimate && !hasAnimated.current) {
+      hasAnimated.current = true;
+      controls.start({
+        width: "100%",
+        transition: {
+          duration: 1.2,
+          ease: "easeInOut",
+          delay: staggerDelay,
+        },
+      });
+    }
+  }, [shouldAnimate, staggerDelay, controls]);
+
+  return (
+    <div className="inline-block">
+      <motion.div
+        initial={{ width: 0 }}
+        animate={controls}
+        className="overflow-hidden whitespace-nowrap"
+      >
+        <span className="font-handwriting text-2xl text-[#4A3F35] font-bold pr-2">
+          - {name}
+        </span>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(testimonials.length);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -44,7 +86,92 @@ export default function Testimonials() {
   const [visibleCount, setVisibleCount] = useState(3);
   const [itemWidth, setItemWidth] = useState(0);
   const itemRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
+  // Tracks which trackItems indices have already been revealed
+  const revealedIndices = useRef<Set<number>>(new Set());
+  // Per-card state: { shouldAnimate, staggerDelay }
+  const [cardAnimStates, setCardAnimStates] = useState<
+    Record<number, { shouldAnimate: boolean; staggerDelay: number }>
+  >({});
+
+  // Compute which trackItems indices are currently visible
+  const getVisibleIndices = useCallback((index: number, count: number) => {
+    const indices: number[] = [];
+    for (let i = index; i < index + count && i < trackItems.length; i++) {
+      indices.push(i);
+    }
+    return indices;
+  }, []);
+
+  // Trigger reveal for a set of indices with left-to-right stagger
+  const revealNewIndices = useCallback((newIndices: number[]) => {
+    if (newIndices.length === 0) return;
+
+    setCardAnimStates((prev) => {
+      const next = { ...prev };
+      newIndices.forEach((trackIdx, positionInBatch) => {
+        // stagger based on position within the newly appearing batch only
+        next[trackIdx] = {
+          shouldAnimate: true,
+          staggerDelay: positionInBatch * 0.25,
+        };
+      });
+      return next;
+    });
+
+    newIndices.forEach((idx) => revealedIndices.current.add(idx));
+  }, []);
+
+  // Handle initial viewport entry
+  const hasEnteredViewport = useRef(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasEnteredViewport.current) {
+            hasEnteredViewport.current = true;
+            const visibleIndices = getVisibleIndices(activeIndex, visibleCount);
+            const unrevealedIndices = visibleIndices.filter(
+              (idx) => !revealedIndices.current.has(idx),
+            );
+            revealNewIndices(unrevealedIndices);
+          }
+        });
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMounted, visibleCount]);
+
+  // Handle slide changes — detect newly visible indices
+  const prevActiveIndex = useRef(activeIndex);
+
+  useEffect(() => {
+    if (!hasEnteredViewport.current) return;
+    if (activeIndex === prevActiveIndex.current) return;
+
+    const visibleIndices = getVisibleIndices(activeIndex, visibleCount);
+    const unrevealedIndices = visibleIndices.filter(
+      (idx) => !revealedIndices.current.has(idx),
+    );
+
+    if (unrevealedIndices.length > 0) {
+      // No stagger for single card entering — instant-ish feel
+      revealNewIndices(unrevealedIndices);
+    }
+
+    prevActiveIndex.current = activeIndex;
+  }, [activeIndex, visibleCount, getVisibleIndices, revealNewIndices]);
+
+  // Layout effects
   useEffect(() => {
     const updateLayout = () => {
       if (window.innerWidth >= 1024) setVisibleCount(3);
@@ -97,7 +224,10 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="py-24 bg-[#EFEBE0] overflow-hidden relative">
+    <section
+      ref={sectionRef}
+      className="py-24 bg-[#EFEBE0] overflow-hidden relative"
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
         .font-handwriting {
@@ -171,14 +301,14 @@ export default function Testimonials() {
               onAnimationComplete={handleAnimationComplete}
             >
               {trackItems.map((testimonial, index) => {
-                const isVisible =
-                  index >= activeIndex && index < activeIndex + visibleCount;
                 const rotation =
                   testimonial.id % 3 === 0
                     ? -1
                     : testimonial.id % 2 === 0
                       ? 1.5
                       : -0.5;
+
+                const animState = cardAnimStates[index];
 
                 return (
                   <motion.div
@@ -203,24 +333,11 @@ export default function Testimonials() {
                       </p>
 
                       <div className="mt-8 flex justify-end">
-                        <div className="inline-block">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={
-                              isVisible ? { width: "100%" } : { width: 0 }
-                            }
-                            transition={{
-                              duration: 1.2,
-                              ease: "easeInOut",
-                              delay: 0.2,
-                            }}
-                            className="overflow-hidden whitespace-nowrap"
-                          >
-                            <span className="font-handwriting text-2xl text-[#4A3F35] font-bold pr-2">
-                              - {testimonial.name}
-                            </span>
-                          </motion.div>
-                        </div>
+                        <NameReveal
+                          name={testimonial.name}
+                          shouldAnimate={animState?.shouldAnimate ?? false}
+                          staggerDelay={animState?.staggerDelay ?? 0}
+                        />
                       </div>
                     </div>
                   </motion.div>
