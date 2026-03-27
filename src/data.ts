@@ -36,7 +36,7 @@ export const testimonials = [
 export const mentorsNotes = [
   {
     quote:
-      "GreenDog Academy completely changed how we understand our dog. The calm leadership approach made our home peaceful again.",
+      "Shashank, It was an absolute pleasure getting to meet you! You carry such a positive energy and are so sweet. You are going to do great things out there in the world. Stay sweet and stay humble, and be you! Wishing you all the best!",
     author: "Corry",
     image: "notes/corry.png?updatedAt=1774595050021",
     dimW: 941,
@@ -44,7 +44,7 @@ export const mentorsNotes = [
   },
   {
     quote:
-      "The structured boarding is unlike anything else. I finally have peace of mind knowing my anxious rescue is in a calm, safe environment.",
+      "From day one I was impressed by your willingness to learn. Even though I didn't work with you much, you were done with green dogs. I was able to watch you grow as a trainer. Keep that passion for learning and never stop asking questions. You are going to do great! I wish you the best!",
     author: "Courtney",
     image: "notes/courtney.png",
     dimW: 865,
@@ -52,7 +52,7 @@ export const mentorsNotes = [
   },
   {
     quote:
-      "Shashank's philosophy is brilliant. We stopped treating symptoms and started addressing the root cause. Our Golden is a new dog.",
+      "Watching you grow as a trainer from your first day until now has been awesome to see first hand. You showed throughout your time here your hunger for knowledge and your drive to become the best trainer you can be. Don't lose that passion and drive as you continue on your dog training career and never stop trying to learn more. If you stay on the path you're on now, I have no doubt you will become one of the best known trainers in India! I look forward to your next trip back to the states, so I can see how your skills have grown. I wish you the absolute best in life and business.",
     author: "Derek",
     image: "notes/derek.png",
     dimW: 789,
@@ -60,7 +60,7 @@ export const mentorsNotes = [
   },
   {
     quote:
-      "I was skeptical about 'psychology-based' training, but the results speak for themselves. The staff is incredibly knowledgeable.",
+      "Shonk! I will forever remember you with your hat over your eyes, following me around to ask if I have synced your book. You have a natural ability with dogs and I hope to see you becoming a successful player in India as you grow yourself and have an influence on the dog scene there. Put all your distractions aside and follow your dreams wherever they take you, and I hope that through it all you find purpose, direction, and joy in dogs. Farewell, as you go home, remember you will always have a home at Tarheel. All the best from us to you!",
     author: "Jerry",
     image: "notes/jerry.png",
     dimW: 1080,
@@ -68,15 +68,15 @@ export const mentorsNotes = [
   },
   {
     quote:
-      "It's not just a facility; it's an education for both dogs and owners. The daily routine they established saved our sanity.",
-    author: "Lee",
+      "Shashaaaaaank! I swear the little time we've gotten to know each other has been completely priceless. You have such a beautiful spirit and mind. Your skills as a dog trainer are astounding, among your other skills as well. I can't wait to see you in the future and also work with you as well. Just know everything will be okay. Keep your head up! Love ya.",
+    author: "Lee H.",
     image: "notes/lee.png",
     dimW: 933,
     dimH: 1314,
   },
   {
     quote:
-      "Professional, clean, and truly caring. They don't just watch your dog; they actively improve their state of mind.",
+      "Shashank, It has been an absolute pleasure to work and train with you! You ask the BEST questions which honestly is what is going to make you such a great dog trainer. Remember to have fun, be patient, and always listen to the dog in front of you. Wishing you the best of luck in all of your future endeavors!",
     author: "Olivia",
     image: "notes/olivia.png",
     dimW: 843,
@@ -84,7 +84,7 @@ export const mentorsNotes = [
   },
   {
     quote:
-      "We couldn't be happier with the progress our dog has made. The team at GreenDog Academy is simply the best.",
+      "Shashank, It was a pleasure getting to know you and work dogs with you. You are very talented and I hope you continue to pursue your dream to train dogs. Your clients will be so lucky to have you as their instructor. I hope you continue to practice decoying. You are a natural! See you in the trial field.",
     author: "T",
     image: "notes/t.png",
     dimW: 956,
