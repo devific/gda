@@ -1,22 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Menu, X, Leaf, Calendar } from "lucide-react";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { Link, useLocation } from "react-router-dom";
+import { useContact } from "../context/ContactProvider";
 
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+export const navItems = [
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "Gallery", path: "/gallery" },
+  { name: "Team", path: "/team" },
+  { name: "Blog", path: "/blog" },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { scrollY } = useScroll();
+  const { pathname } = useLocation();
   const backgroundColor = useTransform(
     scrollY,
     [0, 50],
     ["rgba(248, 247, 245, 0)", "rgba(248, 247, 245, 0.8)"],
   );
   const borderOpacity = useTransform(scrollY, [0, 50], [0, 0.1]);
+  const { openContactDialog } = useContact();
 
   return (
     <motion.header
@@ -24,29 +30,37 @@ export default function Navbar() {
         backgroundColor,
         borderBottom: `1px solid rgba(244, 168, 37, ${borderOpacity.get()})`,
       }}
-      className="sticky top-0 z-50 w-full backdrop-blur-md transition-all duration-300"
+      className="sticky top-0 z-50 w-full transition-all duration-300 backdrop-blur-md"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <span className="text-xl font-extrabold tracking-tight text-slate-900 sr-only">
-            GreenDog <span className="text-primary">Academy</span>
-          </span>
-          <img src="/logo.png" alt="GreenDog Academy" className="h-10 " />
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          <Link to="/" className="flex items-center gap-3">
+            <span className="text-xl font-extrabold tracking-tight sr-only text-slate-900">
+              GreenDog <span className="text-primary">Academy</span>
+            </span>
+            <img src="/logo.png" alt="GreenDog Academy" className="h-10 " />
+          </Link>
 
-          <nav className="hidden md:flex space-x-10">
-            {["Philosophy", "Services", "Facility", "Insights"].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="text-sm font-semibold hover:text-primary transition-colors"
+          <nav className="hidden space-x-10 md:flex">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`text-sm font-semibold hover:text-primary transition-colors ${pathname === item.path ? "text-primary" : ""}`}
               >
-                {item}
-              </a>
+                {item.name}
+              </Link>
             ))}
           </nav>
 
           <div className="flex items-center gap-4">
-            <button className="hidden lg:flex bg-primary hover:bg-primary/90 text-background-dark px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20">
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                openContactDialog();
+              }}
+              className="hidden lg:flex bg-primary hover:bg-primary/90 text-background-dark px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20"
+            >
               Book a Consultation
             </button>
             <button
@@ -69,21 +83,27 @@ export default function Navbar() {
         animate={
           isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }
         }
-        className="md:hidden overflow-hidden bg-background-light border-b border-primary/10"
+        className="overflow-hidden border-b md:hidden bg-background-light border-primary/10"
       >
         <div className="px-4 pt-2 pb-6 space-y-1">
-          {["Philosophy", "Services", "Facility", "Insights"].map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="block px-3 py-4 text-base font-semibold text-slate-900 hover:bg-primary/10 rounded-lg transition-colors"
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
               onClick={() => setIsOpen(false)}
+              className={`block px-3 py-2 rounded-md text-base font-medium hover:bg-primary/10 transition-colors ${pathname === item.path ? "bg-primary/10 text-primary" : "text-slate-900"}`}
             >
-              {item}
-            </a>
+              {item.name}
+            </Link>
           ))}
           <div className="pt-4">
-            <button className="w-full bg-primary hover:bg-primary/90 text-background-dark px-6 py-4 rounded-lg font-bold text-base shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                openContactDialog();
+              }}
+              className="flex items-center justify-center w-full gap-2 px-6 py-4 text-base font-bold rounded-lg shadow-lg bg-primary hover:bg-primary/90 text-background-dark shadow-primary/20"
+            >
               Book a Consultation <Calendar className="w-5 h-5" />
             </button>
           </div>

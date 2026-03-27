@@ -1,320 +1,171 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, useAnimation } from "motion/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { testimonials } from "../data";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Quote, X } from "lucide-react";
+import { testimonials as stories } from "../data";
 
-const trackItems = [...testimonials, ...testimonials, ...testimonials];
-
-// Per-card name reveal controller
-function NameReveal({
-  name,
-  shouldAnimate,
-  staggerDelay,
-}: {
-  name: string;
-  shouldAnimate: boolean;
-  staggerDelay: number;
-}) {
-  const controls = useAnimation();
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    if (shouldAnimate && !hasAnimated.current) {
-      hasAnimated.current = true;
-      controls.start({
-        width: "100%",
-        transition: {
-          duration: 1.2,
-          ease: "easeInOut",
-          delay: staggerDelay,
-        },
-      });
-    }
-  }, [shouldAnimate, staggerDelay, controls]);
-
-  return (
-    <div className="inline-block">
-      <motion.div
-        initial={{ width: 0 }}
-        animate={controls}
-        className="overflow-hidden whitespace-nowrap"
-      >
-        <span className="font-handwriting text-2xl text-[#4A3F35] font-bold pr-2">
-          - {name}
-        </span>
-      </motion.div>
-    </div>
-  );
-}
+const duplicatedStories = [...stories, ...stories];
 
 export default function Testimonials() {
-  const [activeIndex, setActiveIndex] = useState(testimonials.length);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const [itemWidth, setItemWidth] = useState(0);
-  const itemRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [selectedTestimonial, setSelectedTestimonial] = useState<
+    (typeof stories)[0] | null
+  >(null);
 
-  // Tracks which trackItems indices have already been revealed
-  const revealedIndices = useRef<Set<number>>(new Set());
-  // Per-card state: { shouldAnimate, staggerDelay }
-  const [cardAnimStates, setCardAnimStates] = useState<
-    Record<number, { shouldAnimate: boolean; staggerDelay: number }>
-  >({});
-
-  // Compute which trackItems indices are currently visible
-  const getVisibleIndices = useCallback((index: number, count: number) => {
-    const indices: number[] = [];
-    for (let i = index; i < index + count && i < trackItems.length; i++) {
-      indices.push(i);
-    }
-    return indices;
-  }, []);
-
-  // Trigger reveal for a set of indices with left-to-right stagger
-  const revealNewIndices = useCallback((newIndices: number[]) => {
-    if (newIndices.length === 0) return;
-
-    setCardAnimStates((prev) => {
-      const next = { ...prev };
-      newIndices.forEach((trackIdx, positionInBatch) => {
-        // stagger based on position within the newly appearing batch only
-        next[trackIdx] = {
-          shouldAnimate: true,
-          staggerDelay: positionInBatch * 0.25,
-        };
-      });
-      return next;
-    });
-
-    newIndices.forEach((idx) => revealedIndices.current.add(idx));
-  }, []);
-
-  // Handle initial viewport entry
-  const hasEnteredViewport = useRef(false);
-
+  // Handle ESC to close dialog
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasEnteredViewport.current) {
-            hasEnteredViewport.current = true;
-            const visibleIndices = getVisibleIndices(activeIndex, visibleCount);
-            const unrevealedIndices = visibleIndices.filter(
-              (idx) => !revealedIndices.current.has(idx),
-            );
-            revealNewIndices(unrevealedIndices);
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted, visibleCount]);
-
-  // Handle slide changes — detect newly visible indices
-  const prevActiveIndex = useRef(activeIndex);
-
-  useEffect(() => {
-    if (!hasEnteredViewport.current) return;
-    if (activeIndex === prevActiveIndex.current) return;
-
-    const visibleIndices = getVisibleIndices(activeIndex, visibleCount);
-    const unrevealedIndices = visibleIndices.filter(
-      (idx) => !revealedIndices.current.has(idx),
-    );
-
-    if (unrevealedIndices.length > 0) {
-      // No stagger for single card entering — instant-ish feel
-      revealNewIndices(unrevealedIndices);
-    }
-
-    prevActiveIndex.current = activeIndex;
-  }, [activeIndex, visibleCount, getVisibleIndices, revealNewIndices]);
-
-  // Layout effects
-  useEffect(() => {
-    const updateLayout = () => {
-      if (window.innerWidth >= 1024) setVisibleCount(3);
-      else if (window.innerWidth >= 768) setVisibleCount(2);
-      else setVisibleCount(1);
-
-      if (itemRef.current) {
-        setItemWidth(itemRef.current.offsetWidth);
-      }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedTestimonial(null);
     };
-
-    updateLayout();
-    setIsMounted(true);
-    window.addEventListener("resize", updateLayout);
-    const timeoutId = setTimeout(updateLayout, 100);
-
+    if (selectedTestimonial) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
     return () => {
-      window.removeEventListener("resize", updateLayout);
-      clearTimeout(timeoutId);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
     };
-  }, []);
-
-  useEffect(() => {
-    if (isMounted && !isTransitioning) {
-      const timer = setTimeout(() => {
-        setIsTransitioning(true);
-      }, 50);
-      return () => clearTimeout(timer);
-    }
-  }, [isMounted, isTransitioning]);
-
-  const next = () => {
-    if (!isTransitioning) return;
-    setActiveIndex((prev) => prev + 1);
-  };
-
-  const prev = () => {
-    if (!isTransitioning) return;
-    setActiveIndex((prev) => prev - 1);
-  };
-
-  const handleAnimationComplete = () => {
-    if (activeIndex >= testimonials.length * 2) {
-      setIsTransitioning(false);
-      setActiveIndex(activeIndex - testimonials.length);
-    } else if (activeIndex <= 0) {
-      setIsTransitioning(false);
-      setActiveIndex(activeIndex + testimonials.length);
-    }
-  };
+  }, [selectedTestimonial]);
 
   return (
     <section
-      ref={sectionRef}
-      className="py-24 bg-[#EFEBE0] overflow-hidden relative"
+      id="testimonials"
+      className="relative py-24 overflow-hidden bg-stone-50"
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
-        .font-handwriting {
-          font-family: 'Patrick Hand', cursive;
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-        .paper-lines {
-          background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(0,0,0,0.2) 32px);
-          background-attachment: local;
+        .animate-marquee {
+          animation: marquee 40s linear infinite;
+        }
+        .pause-on-hover:hover .animate-marquee {
+          animation-play-state: paused;
         }
       `}</style>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl font-extrabold mb-4"
-          >
-            What Dog Parents Say
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-slate-600"
-          >
-            Real experiences from families who trusted GreenDog Academy
-          </motion.p>
-        </div>
 
-        <div className="relative">
-          {/* Arrows */}
-          <button
-            onClick={prev}
-            aria-label="Previous testimonials"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-12 z-10 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-slate-600 hover:text-[#F4A623] hover:bg-[#f0ead6] transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
+      <div className="px-4 mx-auto mb-16 text-center max-w-7xl sm:px-6 lg:px-8">
+        <motion.span
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="block mb-4 text-sm font-bold tracking-wider uppercase text-primary"
+        >
+          Success Stories
+        </motion.span>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="mb-6 text-4xl font-extrabold md:text-5xl text-slate-900"
+        >
+          Words of praise from others
+          <br />
+          about our presence.
+        </motion.h2>
+      </div>
 
-          <button
-            onClick={next}
-            aria-label="Next testimonials"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-12 z-10 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-slate-600 hover:text-[#F4A623] hover:bg-[#f0ead6] transition-colors"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
+      <div className="relative w-full overflow-hidden pause-on-hover">
+        {/* Gradient masks for smooth fade on edges */}
+        <div className="absolute top-0 left-0 z-10 w-16 h-full pointer-events-none md:w-32 bg-gradient-to-r from-stone-50 to-transparent"></div>
+        <div className="absolute top-0 right-0 z-10 w-16 h-full pointer-events-none md:w-32 bg-gradient-to-l from-stone-50 to-transparent"></div>
 
-          {/* Slider */}
-          <div className="overflow-hidden px-2 py-8 -mx-2 -my-8">
-            <motion.div
-              className="flex gap-6 cursor-grab active:cursor-grabbing"
-              drag="x"
-              dragConstraints={{ left: -10000, right: 10000 }}
-              dragElastic={0.2}
-              onDragEnd={(e, { offset, velocity }) => {
-                if (offset.x < -50 || velocity.x < -500) {
-                  next();
-                } else if (offset.x > 50 || velocity.x > 500) {
-                  prev();
-                }
-              }}
-              animate={{ x: -activeIndex * (itemWidth + 24) }}
-              transition={{
-                type: isTransitioning ? "spring" : "tween",
-                stiffness: 300,
-                damping: 30,
-                duration: isTransitioning ? undefined : 0,
-              }}
-              onAnimationComplete={handleAnimationComplete}
-            >
-              {trackItems.map((testimonial, index) => {
-                const rotation =
-                  testimonial.id % 3 === 0
-                    ? -1
-                    : testimonial.id % 2 === 0
-                      ? 1.5
-                      : -0.5;
+        <div className="flex py-4 w-max animate-marquee">
+          {duplicatedStories.map((story, index) => {
+            const isLong = story.quote.length > 130;
+            const displayQuote = isLong
+              ? `${story.quote.substring(0, 130)}...`
+              : story.quote;
 
-                const animState = cardAnimStates[index];
+            return (
+              <div key={index} className="w-[320px] md:w-[400px] shrink-0 mr-6">
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 h-[280px] flex flex-col hover:shadow-md transition-shadow relative">
+                  <Quote className="absolute w-8 h-8 mb-4 shrink-0 text-primary/10 bottom-8 right-8 fill-primary/10 " />
 
-                return (
-                  <motion.div
-                    key={`${testimonial.id}-${index}`}
-                    ref={index === 0 ? itemRef : null}
-                    className="flex-none w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    whileHover={{
-                      y: -4,
-                      boxShadow:
-                        "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    <div
-                      className="bg-white rounded-xl shadow-sm p-8 h-full flex flex-col justify-between paper-lines relative"
-                      style={{ transform: `rotate(${rotation}deg)` }}
-                    >
-                      <p className="font-handwriting text-xl leading-[32px] text-[#4A3F35] pt-1">
-                        "{testimonial.text}"
-                      </p>
+                  <p className="flex-grow leading-relaxed text-slate-700">
+                    "{displayQuote}"
+                    {isLong && (
+                      <button
+                        onClick={() => setSelectedTestimonial(story)}
+                        className="inline-flex items-center ml-2 text-sm font-semibold text-primary hover:underline"
+                      >
+                        Read more
+                      </button>
+                    )}
+                  </p>
 
-                      <div className="mt-8 flex justify-end">
-                        <NameReveal
-                          name={testimonial.name}
-                          shouldAnimate={animState?.shouldAnimate ?? false}
-                          staggerDelay={animState?.staggerDelay ?? 0}
-                        />
-                      </div>
+                  <div className="flex items-center gap-4 pt-6 mt-6 border-t border-slate-50">
+                    <div className="flex items-center justify-center w-12 h-12 text-lg font-bold rounded-full bg-primary/10 text-primary shrink-0">
+                      {story.author.charAt(0)}
                     </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </div>
+                    <div>
+                      <p className="font-bold text-slate-900">{story.author}</p>
+                      <p className="text-sm text-slate-500">{story.role}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
+
+      {/* Transcript Dialog */}
+      <AnimatePresence>
+        {selectedTestimonial && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedTestimonial(null)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              aria-hidden="true"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative z-10 w-full max-w-lg p-8 bg-white shadow-xl rounded-2xl"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="dialog-title"
+            >
+              <button
+                onClick={() => setSelectedTestimonial(null)}
+                className="absolute p-2 transition-colors rounded-full top-4 right-4 text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                aria-label="Close dialog"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <Quote className="w-10 h-10 mb-6 text-primary fill-primary/10" />
+
+              <div className="prose prose-slate">
+                <p className="mb-8 text-lg leading-relaxed text-slate-700">
+                  "{selectedTestimonial.quote}"
+                </p>
+
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
+                  <div className="flex items-center justify-center w-12 h-12 text-lg font-bold rounded-full bg-primary/10 text-primary shrink-0">
+                    {selectedTestimonial.author.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-bold text-slate-900">
+                      {selectedTestimonial.author}
+                    </p>
+                    <p className="text-sm text-slate-500">
+                      {selectedTestimonial.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

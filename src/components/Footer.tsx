@@ -1,73 +1,128 @@
-import { Leaf, Mail, Phone, MapPin, Globe, Instagram, Share2 } from 'lucide-react';
+import { Link } from "react-router-dom";
+import {
+  Leaf,
+  Mail,
+  Phone,
+  MapPin,
+  Globe,
+  Instagram,
+  Share2,
+} from "lucide-react";
+import { navItems } from "./Navbar";
+import {
+  SiInstagram,
+  SiFacebook,
+  SiYoutube,
+} from "@icons-pack/react-simple-icons";
+
+const socials = [
+  { icon: SiInstagram, href: "https://www.instagram.com/greendog_academy" },
+  { icon: SiYoutube, href: "https://www.youtube.com/@greendogacademy" },
+  {
+    icon: SiFacebook,
+    href: "https://www.facebook.com/profile.php?id=61550998962841",
+  },
+];
 
 export default function Footer() {
   return (
-    <footer className="bg-background-dark text-slate-400 py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          <div className="col-span-1 md:col-span-1">
-            <div className="flex items-center gap-3 text-white mb-6">
-              <Leaf className="text-primary w-8 h-8" />
-              <span className="text-xl font-extrabold tracking-tight">GreenDog Academy</span>
+    <footer className="py-16 bg-background-dark text-slate-400">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 mb-12 md:grid-cols-4">
+          <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center gap-3 mb-6 text-white">
+              <img
+                src="/logo.png"
+                alt="GreenDog Academy"
+                className="h-10 brightness-1000"
+              />
             </div>
-            <p className="text-sm leading-relaxed mb-6">
-              Dedicated to enhancing the lives of dogs and their owners through psychology-based training and professional care.
+            <p className="max-w-sm mb-6 text-sm leading-relaxed">
+              Greendog Academy offers top-notch boarding and training facilities
+              based on outstanding care and enduring trust. It prioritises a
+              safe, secure, and caring environment where each dog feels at home
+              while collaborating with seasoned professionals.
             </p>
             <div className="flex gap-4">
-              {[Globe, Instagram, Share2].map((Icon, i) => (
+              {socials.map((social) => (
                 <a
-                  key={i}
-                  href="#"
-                  className="w-10 h-10 rounded-full border border-slate-700 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
+                  key={social.href}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors text-slate-400 hover:text-white"
                 >
-                  <Icon className="w-4 h-4" />
+                  <social.icon className="w-5 h-5" />
                 </a>
               ))}
             </div>
           </div>
           <div>
-            <h4 className="text-white font-bold mb-6 uppercase text-xs tracking-widest">Navigation</h4>
+            <h4 className="mb-6 text-xs font-bold tracking-widest text-white uppercase">
+              Navigation
+            </h4>
             <ul className="space-y-4 text-sm">
-              {['Home', 'The Philosophy', 'Training Services', 'Boarding Suites', 'Our Team'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="hover:text-primary transition-colors">{item}</a>
+              {navItems.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    to={item.path}
+                    className="transition-colors hover:text-white"
+                  >
+                    {item.name}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-bold mb-6 uppercase text-xs tracking-widest">Knowledge</h4>
-            <ul className="space-y-4 text-sm">
-              {['Behavior Articles', 'Success Stories', 'FAQ', 'Puppy Guide'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="hover:text-primary transition-colors">{item}</a>
+            <h4 className="mb-6 text-xs font-bold tracking-widest text-white uppercase">
+              Contact
+            </h4>
+            <ul className="flex flex-col space-y-4 text-sm">
+              <a href="https://maps.app.goo.gl/7qFFmzep5BKwTH3W8">
+                {" "}
+                <li className="flex items-start gap-3">
+                  <MapPin className="w-4 h-4 mt-1 text-primary shrink-0" />
+                  115/4, Hoskote Taluk, Kambalipura, Hoskote, Kambalipura,
+                  Karnataka 562165
                 </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-6 uppercase text-xs tracking-widest">Contact</h4>
-            <ul className="space-y-4 text-sm">
-              <li className="flex items-start gap-3">
-                <MapPin className="text-primary w-4 h-4 mt-1" />
-                123 Canine Lane, Training Hills, CA
-              </li>
-              <li className="flex items-start gap-3">
-                <Mail className="text-primary w-4 h-4 mt-1" />
-                hello@greendogacademy.com
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone className="text-primary w-4 h-4 mt-1" />
-                (555) 123-4567
-              </li>
+              </a>
+              <a href="mailto:infogreendogacademy@gmail.com">
+                <li className="flex items-start gap-3">
+                  <Mail className="w-4 h-4 mt-1 text-primary shrink-0" />
+                  infogreendogacademy@gmail.com
+                </li>
+              </a>
+              <a href="tel:+916362946590">
+                <li className="flex items-start gap-3">
+                  <Phone className="w-4 h-4 mt-1 text-primary shrink-0" />
+                  +91 636 294 6590
+                </li>
+              </a>
+              <a href="tel:+917975460376">
+                <li className="flex items-start gap-3">
+                  <Phone className="w-4 h-4 mt-1 text-primary shrink-0" />
+                  +91 797 546 0376
+                </li>
+              </a>
             </ul>
           </div>
         </div>
-        <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-          <p>© 2024 GreenDog Academy. All rights reserved.</p>
+        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs border-t border-slate-800 md:flex-row">
+          <p>©2026 GreenDog Academy. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <Link
+              to="/legal/privacy"
+              className="transition-colors hover:text-white"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              to="/legal/terms"
+              className="transition-colors hover:text-white"
+            >
+              Terms of Service
+            </Link>
           </div>
         </div>
       </div>
