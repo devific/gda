@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, useAnimation } from "motion/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, useAnimation, AnimatePresence } from "motion/react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { testimonials } from "../data";
 
 const trackItems = [...testimonials, ...testimonials, ...testimonials];
 
-// Per-card name reveal controller
+const MAX_LENGTH = 220; // adjust threshold
+
 function NameReveal({
   name,
   shouldAnimate,
@@ -56,14 +57,16 @@ export default function Testimonials() {
   const itemRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Tracks which trackItems indices have already been revealed
+  const [selectedNote, setSelectedNote] = useState<{
+    quote: string;
+    author: string;
+  } | null>(null);
+
   const revealedIndices = useRef<Set<number>>(new Set());
-  // Per-card state: { shouldAnimate, staggerDelay }
   const [cardAnimStates, setCardAnimStates] = useState<
     Record<number, { shouldAnimate: boolean; staggerDelay: number }>
   >({});
 
-  // Compute which trackItems indices are currently visible
   const getVisibleIndices = useCallback((index: number, count: number) => {
     const indices: number[] = [];
     for (let i = index; i < index + count && i < trackItems.length; i++) {
@@ -72,14 +75,12 @@ export default function Testimonials() {
     return indices;
   }, []);
 
-  // Trigger reveal for a set of indices with left-to-right stagger
   const revealNewIndices = useCallback((newIndices: number[]) => {
     if (newIndices.length === 0) return;
 
     setCardAnimStates((prev) => {
       const next = { ...prev };
       newIndices.forEach((trackIdx, positionInBatch) => {
-        // stagger based on position within the newly appearing batch only
         next[trackIdx] = {
           shouldAnimate: true,
           staggerDelay: positionInBatch * 0.25,
@@ -91,7 +92,6 @@ export default function Testimonials() {
     newIndices.forEach((idx) => revealedIndices.current.add(idx));
   }, []);
 
-  // Handle initial viewport entry
   const hasEnteredViewport = useRef(false);
 
   useEffect(() => {
@@ -116,10 +116,8 @@ export default function Testimonials() {
 
     observer.observe(section);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted, visibleCount]);
+  }, [activeIndex, visibleCount, getVisibleIndices, revealNewIndices]);
 
-  // Handle slide changes — detect newly visible indices
   const prevActiveIndex = useRef(activeIndex);
 
   useEffect(() => {
@@ -132,14 +130,12 @@ export default function Testimonials() {
     );
 
     if (unrevealedIndices.length > 0) {
-      // No stagger for single card entering — instant-ish feel
       revealNewIndices(unrevealedIndices);
     }
 
     prevActiveIndex.current = activeIndex;
   }, [activeIndex, visibleCount, getVisibleIndices, revealNewIndices]);
 
-  // Layout effects
   useEffect(() => {
     const updateLayout = () => {
       if (window.innerWidth >= 1024) setVisibleCount(3);
@@ -196,125 +192,113 @@ export default function Testimonials() {
       ref={sectionRef}
       className="py-24 bg-[#EFEBE0] overflow-hidden relative"
     >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
-        .font-handwriting {
-          font-family: 'Patrick Hand', cursive;
-        }
-        .paper-lines {
-          background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(0,0,0,0.2) 32px);
-          background-attachment: local;
-        }
-      `}</style>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl font-extrabold mb-4"
-          >
-            What Dog Parents Say
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-slate-600"
-          >
+      <div className="relative px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-4xl font-extrabold">What Dog Parents Say</h2>
+          <p className="text-slate-600">
             Real experiences from families who trusted GreenDog Academy
-          </motion.p>
+          </p>
         </div>
 
         <div className="relative">
-          {/* Arrows */}
           <button
             onClick={prev}
-            aria-label="Previous testimonials"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-12 z-10 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-slate-600 hover:text-[#F4A623] hover:bg-[#f0ead6] transition-colors"
+            className="absolute left-0 z-10 -translate-y-1/2 top-1/2"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft />
           </button>
 
           <button
             onClick={next}
-            aria-label="Next testimonials"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-12 z-10 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-slate-600 hover:text-[#F4A623] hover:bg-[#f0ead6] transition-colors"
+            className="absolute right-0 z-10 -translate-y-1/2 top-1/2"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight />
           </button>
 
-          {/* Slider */}
-          <div className="overflow-hidden px-2 py-8 -mx-2 -my-8">
+          <div className="overflow-hidden">
             <motion.div
-              className="flex gap-6 cursor-grab active:cursor-grabbing"
-              drag="x"
-              dragConstraints={{ left: -10000, right: 10000 }}
-              dragElastic={0.2}
-              onDragEnd={(e, { offset, velocity }) => {
-                if (offset.x < -50 || velocity.x < -500) {
-                  next();
-                } else if (offset.x > 50 || velocity.x > 500) {
-                  prev();
-                }
-              }}
-              animate={{ x: -activeIndex * (itemWidth + 24) }}
-              transition={{
-                type: isTransitioning ? "spring" : "tween",
-                stiffness: 300,
-                damping: 30,
-                duration: isTransitioning ? undefined : 0,
-              }}
+              className="flex gap-6"
+              animate={{ x: -activeIndex * (itemWidth + 32) }}
               onAnimationComplete={handleAnimationComplete}
             >
               {trackItems.map((testimonial, index) => {
-                const rotation =
-                  testimonial.id % 3 === 0
-                    ? -1
-                    : testimonial.id % 2 === 0
-                      ? 1.5
-                      : -0.5;
+                const isLong = testimonial.quote.length > MAX_LENGTH;
+                const preview = isLong
+                  ? testimonial.quote.slice(0, MAX_LENGTH) + "..."
+                  : testimonial.quote;
 
                 const animState = cardAnimStates[index];
 
                 return (
-                  <motion.div
+                  <div
                     key={`${testimonial.id}-${index}`}
                     ref={index === 0 ? itemRef : null}
-                    className="flex-none w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    whileHover={{
-                      y: -4,
-                      boxShadow:
-                        "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-                    }}
+                    className="flex-none w-full md:w-1/2 lg:w-1/3"
                   >
-                    <div
-                      className="bg-white rounded-xl shadow-sm p-8 h-full flex flex-col justify-between paper-lines relative"
-                      style={{ transform: `rotate(${rotation}deg)` }}
-                    >
-                      <p className="font-handwriting text-xl leading-[32px] text-[#4A3F35] pt-1">
-                        "{testimonial.text}"
+                    <div className="flex flex-col justify-between h-full p-6 bg-white rounded-xl">
+                      <p className="text-lg font-handwriting">
+                        {preview}{" "}
+                        {isLong && (
+                          <button
+                            onClick={() =>
+                              setSelectedNote({
+                                quote: testimonial.quote,
+                                author: testimonial.author,
+                              })
+                            }
+                            className="mt-3 text-sm text-[#F4A623] hover:underline self-start inline"
+                          >
+                            Read more
+                          </button>
+                        )}
                       </p>
 
-                      <div className="mt-8 flex justify-end">
+                      <div className="mt-6 text-right">
                         <NameReveal
-                          name={testimonial.name}
+                          name={testimonial.author}
                           shouldAnimate={animState?.shouldAnimate ?? false}
                           staggerDelay={animState?.staggerDelay ?? 0}
                         />
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </motion.div>
           </div>
         </div>
       </div>
+
+      {/* Dialog */}
+      <AnimatePresence>
+        {selectedNote && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedNote(null)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            />
+            <motion.div className="relative z-10 w-full max-w-lg p-8 bg-white shadow-xl rounded-2xl">
+              <button
+                onClick={() => setSelectedNote(null)}
+                className="absolute top-4 right-4"
+              >
+                <X />
+              </button>
+
+              <blockquote className="text-lg italic">
+                "{selectedNote.quote}"
+              </blockquote>
+
+              <p className="mt-4 font-medium text-right">
+                — {selectedNote.author}
+              </p>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

@@ -49,7 +49,6 @@ export default function Home() {
         <MentorsNotes />
         <Insights />
         <FAQ />
-        <CTA />
       </main>
     </>
   );

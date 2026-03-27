@@ -10,6 +10,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { ContactProvider } from "./context/ContactProvider";
 import Legal from "./pages/Legal";
 import Map from "./components/Map";
+import CTA from "./components/CTA";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/legal/:slug" element={<Legal />} />
         </Routes>
+        <CTA />
         <Map />
         <Footer />
       </div>

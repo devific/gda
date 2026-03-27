@@ -38,8 +38,10 @@ export default function Footer() {
               />
             </div>
             <p className="max-w-sm mb-6 text-sm leading-relaxed">
-              Dedicated to enhancing the lives of dogs and their owners through
-              psychology-based training and professional care.
+              Greendog Academy offers top-notch boarding and training facilities
+              based on outstanding care and enduring trust. It prioritises a
+              safe, secure, and caring environment where each dog feels at home
+              while collaborating with seasoned professionals.
             </p>
             <div className="flex gap-4">
               {socials.map((social) => (
