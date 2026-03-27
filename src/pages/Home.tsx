@@ -46,8 +46,6 @@ export default function Home() {
         <Facility />
         <Comparison />
         <Testimonials />
-        <MentorsNotes />
-        <Insights />
         <FAQ />
       </main>
     </>

@@ -11,6 +11,7 @@ import { ContactProvider } from "./context/ContactProvider";
 import Legal from "./pages/Legal";
 import Map from "./components/Map";
 import CTA from "./components/CTA";
+import About from "./pages/About";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/team" element={<Team />} />
+          <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/legal/:slug" element={<Legal />} />
