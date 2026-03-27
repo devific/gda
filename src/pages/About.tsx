@@ -42,7 +42,7 @@ export default function About() {
   }, [selectedNote]);
 
   return (
-    <div className="min-h-screen pt-24 pb-16 overflow-hidden bg-stone-50">
+    <div className="min-h-screen overflow-hidden lg:pt-24 lg:pb-16 bg-stone-50">
       {/* Founder Section */}
       <section className="py-16">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -58,7 +58,7 @@ export default function About() {
                 <img
                   alt="Shashank with a dog"
                   className="w-full h-[600px] object-cover"
-                  src="https://greendogacademy.in/wp-content/uploads/2025/12/shash.webp"
+                  src={`${imagekitBaseUrl}/notes/shash-devi.webp?tr=f-auto,q-auto,w-800`}
                 />
               </div>
               <motion.div
@@ -167,7 +167,7 @@ export default function About() {
                     {/* Transcript Button */}
                     <button
                       onClick={() => setSelectedNote(note)}
-                      className="absolute z-20 flex items-center justify-center w-10 h-10 transition-colors bg-white border rounded-full shadow-sm opacity-0 bottom-4 right-4 border-stone-200 text-stone-400 hover:text-primary hover:bg-stone-50 group-hover:opacity-100 focus:opacity-100"
+                      className="absolute z-20 flex items-center justify-center w-10 h-10 transition-colors bg-white border rounded-full shadow-sm lg:opacity-0 bottom-4 right-4 border-stone-200 text-stone-400 hover:text-primary hover:bg-stone-50 group-hover:opacity-100 focus:opacity-100"
                       aria-label={`Read transcript for ${note.author}'s note`}
                     >
                       <FileText className="w-5 h-5" />
