@@ -6,6 +6,7 @@ export default function Gallery() {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [visibleCount, setVisibleCount] = useState(12);
   const loaderRef = useRef(null);
+  const gridRef = useRef(null);
 
   const nextImage = () =>
     setSelectedIndex((prev) => (prev + 1) % images.length);
@@ -27,7 +28,7 @@ export default function Gallery() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [selectedIndex]);
 
-  // ✅ Infinite Scroll using Intersection Observer
+  // ✅ Infinite Scroll
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
@@ -35,15 +36,42 @@ export default function Gallery() {
       }
     });
 
-    const currentRef = loaderRef.current;
-    if (currentRef) observer.observe(currentRef);
+    const current = loaderRef.current;
+    if (current) observer.observe(current);
 
     return () => {
-      if (currentRef) observer.unobserve(currentRef);
+      if (current) observer.unobserve(current);
     };
   }, []);
 
-  // ✅ Swipe handling
+  // ✅ Masonry calculation
+  const resizeGridItem = (item) => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const rowHeight = parseInt(
+      window.getComputedStyle(grid).getPropertyValue("grid-auto-rows"),
+    );
+    const rowGap = parseInt(
+      window.getComputedStyle(grid).getPropertyValue("gap"),
+    );
+
+    const content = item.querySelector("img");
+    if (!content) return;
+
+    const rowSpan = Math.ceil(
+      (content.getBoundingClientRect().height + rowGap) / (rowHeight + rowGap),
+    );
+
+    item.style.gridRowEnd = `span ${rowSpan}`;
+  };
+
+  const handleImageLoad = (e) => {
+    const item = e.target.parentElement;
+    resizeGridItem(item);
+  };
+
+  // ✅ Swipe
   const handleDragEnd = (event, info) => {
     if (info.offset.x < -100) nextImage();
     if (info.offset.x > 100) prevImage();
@@ -52,8 +80,15 @@ export default function Gallery() {
   return (
     <div className="min-h-screen pt-24 pb-16 bg-slate-50">
       <div className="px-4 mx-auto max-w-7xl">
-        {/* Grid */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* 🔥 Masonry Grid */}
+        <div
+          ref={gridRef}
+          className="grid gap-6"
+          style={{
+            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+            gridAutoRows: "10px",
+          }}
+        >
           {images.slice(0, visibleCount).map((img, i) => (
             <div
               key={i}
@@ -61,23 +96,19 @@ export default function Gallery() {
               className="relative overflow-hidden cursor-pointer group rounded-2xl"
             >
               <img
-                src={`${imagekitBaseUrl}/photos/${img}?tr=w-400,h-400,c-at_max,f-auto,q-40`}
-                alt={`image-${i}`}
+                src={`${imagekitBaseUrl}/photos/${img}?tr=w-500,f-auto,q-50`}
+                alt=""
                 loading="lazy"
-                className="object-cover w-full h-full transition duration-500 aspect-square"
+                onLoad={handleImageLoad}
+                className="w-full rounded-2xl"
               />
-
-              <div className="absolute inset-0 flex items-end p-4 transition opacity-0 bg-black/40 group-hover:opacity-100">
-                <p className="font-semibold text-white">{i}</p>
-              </div>
             </div>
           ))}
         </div>
 
-        {/* 🔻 Observer trigger */}
+        {/* Loader trigger */}
         <div ref={loaderRef} className="h-10" />
 
-        {/* Loader text */}
         {visibleCount < images.length && (
           <p className="mt-6 text-center text-gray-500">
             Loading more images...
@@ -94,13 +125,11 @@ export default function Gallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* Background */}
             <div
               className="absolute inset-0 bg-black/60 backdrop-blur-md"
               onClick={() => setSelectedIndex(null)}
             />
 
-            {/* Close */}
             <button
               onClick={() => setSelectedIndex(null)}
               className="absolute z-50 text-3xl text-white top-6 right-6"
@@ -108,7 +137,6 @@ export default function Gallery() {
               ✕
             </button>
 
-            {/* Prev */}
             <button
               onClick={prevImage}
               className="absolute z-50 text-4xl text-white left-6"
@@ -116,25 +144,20 @@ export default function Gallery() {
               ‹
             </button>
 
-            {/* Image */}
             <motion.img
               key={selectedIndex}
-              loading="lazy"
               src={`${imagekitBaseUrl}/photos/${
                 images[selectedIndex]
-              }?tr=w-700,h-500,c-at_max,f-auto,q-40`}
-              alt="preview"
+              }?tr=w-900,f-auto,q-70`}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               onDragEnd={handleDragEnd}
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.85, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 25 }}
-              className="z-40 max-h-[80vh] rounded-xl shadow-2xl cursor-grab active:cursor-grabbing"
+              className="z-40 max-h-[80vh] rounded-xl shadow-2xl"
             />
 
-            {/* Next */}
             <button
               onClick={nextImage}
               className="absolute z-50 text-4xl text-white right-6"
@@ -142,7 +165,6 @@ export default function Gallery() {
               ›
             </button>
 
-            {/* Caption */}
             <p className="absolute z-50 text-white bottom-6">
               {images[selectedIndex]?.title || ""}
             </p>

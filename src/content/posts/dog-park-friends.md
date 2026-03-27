@@ -5,7 +5,7 @@ excerpt: "Debunking myths about socialization and what your dog actually needs t
 category: "Socialization"
 date: "Mar 5, 2024"
 readTime: "6 min read"
-image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDqAmoFo1F_gk0Qds8EF56bIur8iOglmO_iJJ34s41ZF9NDIHDeXCMX68mTy5fX6lvZ02yL8j9LnReMeoXGlriDSmA0dec7i9qTcgbtg02Dm-LK67ACg4D0sY55zuvnie0EpzIP3uqS4py8OOLvRXEcBEOzOFnKt_MRV_dFeUVItVjGWc6aYyuDZLzT6sjIokny2ShnSpjt56TFuCP1xTTmGvrBnDbcJVa3ShOGhhNo6U0VNn2RK-2vH8KUrIaQBtjI-t7lykWYinUl"
+image: "https://ik.imagekit.io/devific/gda//photos/DSC03513.JPG?tr=w-500,f-auto,q-50"
 ---
 
 # The Socialization Misunderstanding

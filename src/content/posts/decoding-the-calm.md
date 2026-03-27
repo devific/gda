@@ -5,7 +5,7 @@ excerpt: "Learn why a dog's state of mind is more important than their physical 
 category: "Behavior"
 date: "Mar 15, 2024"
 readTime: "5 min read"
-image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCypCP2xYsyCkW2s768eV1kzeaqLQKGWxeAsaIYwQjVEElPDbX1tl1M5YCEw3ivenlSYNO3Yo4TAXddNORbbpOsP_w2JJpX1HPXioAe0wXI1xv30pwFwPh2M4yc8ej2FsuEXPjZS0vonOKFo8PZ5EJy0MawKTScrLiziSm3teBCKxJP6Yevaro5PI9IIHw2VT844trR_lAgzgOWGPX9fqcj397-j86wgVUjUhm9r42uMxW-SZq8l9kutLThBvdlOXK_WExhbSMYvZ3J"
+image: "https://ik.imagekit.io/devific/gda//photos/DSC03332.JPG?tr=w-500,f-auto,q-50"
 ---
 
 # The Illusion of the Tired Dog

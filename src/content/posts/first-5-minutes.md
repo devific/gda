@@ -5,7 +5,7 @@ excerpt: "Every time you see your dog, you're training them. Here's how to start
 category: "Training"
 date: "Mar 10, 2024"
 readTime: "4 min read"
-image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDfhlL301nYQjh22S-hubvrli2k6zjtJCOJHKYTnq1iwtcwI6EPOSohvuy8nl-WhtVNHCZavU2i61UaWl104Jnp_ep-7fzjahpRogTEdPHw3Rg_87ZZkO4YdZzJ0-WlwT9LiOhG9GlmEDWTXzJ3KbIsK1DcU1Hut1Rwr6bLIG79DYPvqfv6GC6Xw2HU0ysqvDGv8tZ43yXa_D2Ezc87Xa8h-rfbTUpkHXNsimXOO54kZw56nUs-uBp6ctfRcLQzXBOs4pxCTOj3Nh4x"
+image: "https://ik.imagekit.io/devific/gda//photos/DSC03250.JPG?tr=w-500,f-auto,q-50"
 ---
 
 # The Crucial Window
