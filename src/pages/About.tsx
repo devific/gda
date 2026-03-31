@@ -117,7 +117,7 @@ export default function About() {
               viewport={{ once: true }}
               className="mb-4 text-4xl font-extrabold"
             >
-              The Journey
+              Mentor Reflections 
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -126,8 +126,7 @@ export default function About() {
               transition={{ delay: 0.2 }}
               className="max-w-2xl mx-auto text-slate-600"
             >
-              A collection of memories and heartfelt notes of Shashank's
-              mentors.
+              A collection of personal notes capturing guidance, growth, and shared experiences
             </motion.p>
           </div>
 
