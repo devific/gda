@@ -26,6 +26,25 @@ const images = [
 
 export default function Facility() {
   return (
+    <div style={{ padding: "56.25% 0 0 0", position: "relative" }}>
+      <iframe
+        src="https://player.vimeo.com/video/1180771480?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1"
+        frameBorder="0"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+        title="Greendog Academy Location"
+      ></iframe>
+    </div>
+  );
+
+  return (
     <section id="facility" className="py-24">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-12">

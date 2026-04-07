@@ -43,8 +43,8 @@ export default function Home() {
         <Stats />
         <Founder />
         <Services />
-        <Facility />
         <Comparison />
+        <Facility />
         <Testimonials />
         <FAQ />
       </main>
