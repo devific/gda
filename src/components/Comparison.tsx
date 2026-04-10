@@ -58,13 +58,13 @@ export default function Comparison() {
           <table className="w-full text-left min-w-[600px]">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="sticky left-0 z-20 bg-slate-50 px-8 py-6 text-sm font-bold uppercase tracking-wider border-r border-slate-200">
+                <th className="sticky left-0 z-20 bg-slate-50 p-3 lg:px-8 lg:py-6 text-sm font-bold uppercase tracking-wider border-r border-slate-200">
                   Features
                 </th>
-                <th className="px-8 py-6 text-sm font-bold uppercase tracking-wider text-slate-400">
+                <th className="p-3 lg:px-8 lg:py-6 text-sm font-bold uppercase tracking-wider text-slate-400">
                   Typical Boarding
                 </th>
-                <th className="px-8 py-6 text-sm font-bold uppercase tracking-wider text-primary">
+                <th className="p-3 lg:px-8 lg:py-6 text-sm font-bold uppercase tracking-wider text-primary">
                   GreenDog Academy
                 </th>
               </tr>
@@ -79,13 +79,13 @@ export default function Comparison() {
                   transition={{ delay: index * 0.1 }}
                   className="group  transition-colors"
                 >
-                  <td className="sticky left-0 z-10 bg-white  px-8 py-6 font-medium border-r border-slate-200 transition-colors">
+                  <td className="sticky left-0 z-10 bg-white  p-3 lg:px-8 lg:py-6 font-medium border-r border-slate-200 transition-colors">
                     {feature.name}
                   </td>
-                  <td className="px-8 py-6 text-slate-500">
+                  <td className="p-3 lg:px-8 lg:py-6 text-slate-500">
                     {feature.typical}
                   </td>
-                  <td className="px-8 py-6 font-bold flex items-center gap-2">
+                  <td className="p-3 lg:px-8 lg:py-6 font-bold flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-green-500" />{" "}
                     {feature.greendog}
                   </td>
