@@ -32,9 +32,9 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-3 mb-6 text-white">
               <img
-                src="/logo.png"
+                src="/logo-white.png"
                 alt="GreenDog Academy"
-                className="h-10 brightness-1000"
+                className="h-10"
               />
             </div>
             <p className="max-w-sm mb-6 text-sm leading-relaxed">

@@ -60,6 +60,9 @@ importers:
       '@types/node':
         specifier: ^22.14.0
         version: 22.19.13
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.14
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.27(postcss@8.5.8)
