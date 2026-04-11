@@ -1,70 +1,171 @@
-import { motion } from 'motion/react';
-import { Star } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Quote, X } from "lucide-react";
+import { testimonials as stories } from "../data";
 
-const reviews = [
-  {
-    name: 'Sarah Jenkins',
-    role: 'Golden Retriever Parent',
-    text: "The change in Max's behavior was night and day. He came back a more confident and much calmer dog. Shashank truly has a gift.",
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxnyTl0twPsZjY-3uacKHnCz08LKswNUhTz11mLOBzVk5aJAZh-Vh2nvVgY0EEXHghUEgmv8e-o2biFBtyXhYMuEI3-rxzUVv7XbVmLNfhTXFC9sp9Tw-OMIUJf5qUUetnp4ZdfxarQzRv9Q0XUdjd7fPEKK49JxVqJqPhQw_TZeUj-0MJRIDscyuh9viUOJFEu1_a3exlK1e3TAmW2cZDoymVAH4ZTSHjVO9WJEX3YnCX5zkvQA93k2lwBOMzcc-eBLDZnnDYd_Jg',
-  },
-  {
-    name: 'David Thompson',
-    role: 'German Shepherd Parent',
-    text: "Finally, a place that doesn't just 'watch' my dog but actually understands him. The boarding facility is immaculate and the structure is perfect.",
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD1fly_5naP3hZkrDfYNkhH3967VhBzqCdwB8dw9AHahHpuziN7tocpKcsV7liRRmLtlxikz6705dokj0zjwG3Vd7Lf4UA_X7Y7ltw7hGXZdHm0jOtXLnFDXLJf4xHIDfz4aXffzHFBPf9-ShSr-s3g1i2F0UPoQVSGEAl-mTOTopXJuxGj8d1FekbEyS5M7NYJZE7szG0x_nJeGVlVPx9uV3m6xZ0zRQwWpsc7pPUFSvfj7bu-f5a8-srJFbemBzh4Gac09KKB0GEw',
-  },
-  {
-    name: 'Elena Rodriguez',
-    role: 'Mixed Breed Parent',
-    text: 'The online resources and the foundation training helped us as much as it helped our dog. Highly recommend for any serious owner.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCFjDhwV_78JxOR1LusElHYS1Z6pWOo-U_CK-E6PuK53m2aH9p_sThqKszLL7vli8issk2fn3pgEFIxUBsP5wJCsH2P_SObRj42WMoOzqdRMTIN1_9udsXxmZ7aN6R9_l9dqTtzwEIDvjAIckT5Zl7p6nZCQgGh7VfsqRSg0PyL5XIFEo93tVyIwi3f7LHSgxwjAA1ccxu-S6Xe8xD-PZ_3YbvWA8PAfsytMmrjsowdBK4pH8rxFEwVhR35cmxcrJHScU82eEkiscjo',
-  },
-];
+const duplicatedStories = [...stories, ...stories];
 
 export default function Testimonials() {
+  const [selectedTestimonial, setSelectedTestimonial] = useState<
+    (typeof stories)[0] | null
+  >(null);
+
+  // Handle ESC to close dialog
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedTestimonial(null);
+    };
+    if (selectedTestimonial) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [selectedTestimonial]);
+
   return (
-    <section className="py-24 bg-primary/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="testimonials"
+      className="relative py-24 overflow-hidden bg-stone-50"
+    >
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 40s linear infinite;
+        }
+        .pause-on-hover:hover .animate-marquee {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      <div className="px-4 mx-auto mb-16 text-center max-w-7xl sm:px-6 lg:px-8">
+        <motion.span
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="block mb-4 text-sm font-bold tracking-wider uppercase text-primary"
+        >
+          Success Stories
+        </motion.span>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-4xl font-extrabold text-center mb-16 italic"
+          transition={{ delay: 0.1 }}
+          className="mb-6 text-4xl font-extrabold md:text-5xl text-slate-900"
         >
-          Words from Our Pack
+          Words of praise from others
+          <br />
+          about our presence.
         </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((review, index) => (
-            <motion.div
-              key={review.name}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100"
-            >
-              <div className="flex text-primary mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-primary" />
-                ))}
+      </div>
+
+      <div className="relative w-full overflow-hidden pause-on-hover">
+        {/* Gradient masks for smooth fade on edges */}
+        <div className="absolute top-0 left-0 z-10 w-16 h-full pointer-events-none md:w-32 bg-gradient-to-r from-stone-50 to-transparent"></div>
+        <div className="absolute top-0 right-0 z-10 w-16 h-full pointer-events-none md:w-32 bg-gradient-to-l from-stone-50 to-transparent"></div>
+
+        <div className="flex py-4 w-max animate-marquee">
+          {duplicatedStories.map((story, index) => {
+            const isLong = story.quote.length > 130;
+            const displayQuote = isLong
+              ? `${story.quote.substring(0, 130)}...`
+              : story.quote;
+
+            return (
+              <div key={index} className="w-[320px] md:w-[400px] shrink-0 mr-6">
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 h-[280px] flex flex-col hover:shadow-md transition-shadow relative">
+                  <Quote className="absolute w-8 h-8 mb-4 shrink-0 text-primary/10 bottom-8 right-8 fill-primary/10 " />
+
+                  <p className="flex-grow leading-relaxed text-slate-700">
+                    "{displayQuote}"
+                    {isLong && (
+                      <button
+                        onClick={() => setSelectedTestimonial(story)}
+                        className="inline-flex items-center ml-2 text-sm font-semibold text-primary hover:underline"
+                      >
+                        Read more
+                      </button>
+                    )}
+                  </p>
+
+                  <div className="flex items-center gap-4 pt-6 mt-6 border-t border-slate-50">
+                    <div className="flex items-center justify-center w-12 h-12 text-lg font-bold rounded-full bg-primary/10 text-primary shrink-0">
+                      {story.author.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900">{story.author}</p>
+                      <p className="text-sm text-slate-500">{story.role}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="text-slate-600 italic mb-6 leading-relaxed">"{review.text}"</p>
-              <div className="flex items-center gap-4">
-                <img
-                  src={review.image}
-                  alt={review.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-bold">{review.name}</p>
-                  <p className="text-xs text-slate-500 uppercase tracking-tighter">{review.role}</p>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Transcript Dialog */}
+      <AnimatePresence>
+        {selectedTestimonial && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedTestimonial(null)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              aria-hidden="true"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative z-10 w-full max-w-lg p-8 bg-white shadow-xl rounded-2xl"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="dialog-title"
+            >
+              <button
+                onClick={() => setSelectedTestimonial(null)}
+                className="absolute p-2 transition-colors rounded-full top-4 right-4 text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                aria-label="Close dialog"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <Quote className="w-10 h-10 mb-6 text-primary fill-primary/10" />
+
+              <div className="prose prose-slate">
+                <p className="mb-8 text-lg leading-relaxed text-slate-700">
+                  "{selectedTestimonial.quote}"
+                </p>
+
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
+                  <div className="flex items-center justify-center w-12 h-12 text-lg font-bold rounded-full bg-primary/10 text-primary shrink-0">
+                    {selectedTestimonial.author.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-bold text-slate-900">
+                      {selectedTestimonial.author}
+                    </p>
+                    <p className="text-sm text-slate-500">
+                      {selectedTestimonial.role}
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
-          ))}
-        </div>
-      </div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
