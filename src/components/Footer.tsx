@@ -126,6 +126,13 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <a
+        href="https://devific.in/?ref=greendogacademy.in"
+        target="_blank"
+        className="hidden"
+      >
+        Devific
+      </a>
     </footer>
   );
 }
