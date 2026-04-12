@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowRight, FileText, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { FileText, X } from "lucide-react";
 import { imagekitBaseUrl, mentorsNotes } from "../data";
 
 const mentorImages = [
   `${imagekitBaseUrl}/notes/1.jpeg`,
   `${imagekitBaseUrl}/notes/2.jpeg`,
-  `${imagekitBaseUrl}/notes/3.jpeg`,
   `${imagekitBaseUrl}/notes/4.jpeg`,
   `${imagekitBaseUrl}/notes/5.jpeg`,
   `${imagekitBaseUrl}/notes/6.jpeg`,
@@ -18,6 +16,11 @@ const scrapbookItems = [
   ...mentorsNotes.map((t) => ({ type: "note", data: t })),
   ...mentorImages.map((img) => ({ type: "image", data: img })),
 ].sort(() => Math.random() - 0.5);
+
+const scrapbookItemsWithConstantFirst = [
+  { type: "image", data: `${imagekitBaseUrl}/notes/3.jpeg` },
+  ...scrapbookItems,
+];
 
 export default function About() {
   const [selectedNote, setSelectedNote] = useState<
@@ -117,7 +120,7 @@ export default function About() {
               viewport={{ once: true }}
               className="mb-4 text-4xl font-extrabold"
             >
-              Mentor Reflections 
+              Mentor Reflections
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -126,12 +129,13 @@ export default function About() {
               transition={{ delay: 0.2 }}
               className="max-w-2xl mx-auto text-slate-600"
             >
-              A collection of personal notes capturing guidance, growth, and shared experiences
+              A collection of personal notes capturing guidance, growth, and
+              shared experiences
             </motion.p>
           </div>
 
           <div className="gap-8 space-y-8 columns-1 sm:columns-2 lg:columns-3">
-            {scrapbookItems.map((item, index) => {
+            {scrapbookItemsWithConstantFirst?.map((item, index) => {
               // Generate a random rotation between -4 and 4 degrees
               const rotation = Math.random() * 8 - 4;
 
@@ -156,7 +160,7 @@ export default function About() {
                       style={{ aspectRatio: `${note.dimW} / ${note.dimH}` }}
                     >
                       <img
-                        src={`${imagekitBaseUrl}${note.image}?tr=f-auto,q-auto,w-600`}
+                        src={`${imagekitBaseUrl}${note.image}?tr=f-auto,q-70,w-400`}
                         alt={`Handwritten note from ${note.author}`}
                         className="object-contain w-full h-full opacity-90 mix-blend-multiply"
                         loading="lazy"
@@ -193,7 +197,7 @@ export default function About() {
                     <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-stone-300"></div>
 
                     <img
-                      src={imgUrl}
+                      src={`${imgUrl}?tr=f-auto,q-70,w-500`}
                       alt="Shashank with mentor"
                       className="w-full h-auto object-cover rounded-sm filter sepia-[0.2] contrast-110"
                       loading="lazy"
