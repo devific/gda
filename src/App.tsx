@@ -1,19 +1,32 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
+import Map from "./components/Map";
+import CTA from "./components/CTA";
+
 import Home from "./pages/Home";
 import Gallery from "./pages/Gallery";
 import Team from "./pages/Team";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
-import ScrollToTop from "./components/ScrollToTop";
-import { ContactProvider } from "./context/ContactProvider";
 import Legal from "./pages/Legal";
-import Map from "./components/Map";
-import CTA from "./components/CTA";
 import About from "./pages/About";
 
+import { ContactProvider } from "./context/ContactProvider";
+
 export default function App() {
+  const location = useLocation();
+
+  // ✅ Meta Pixel PageView tracking on route change
+  useEffect(() => {
+    if (window.fbq) {
+      window.fbq("track", "PageView");
+    }
+  }, [location]);
+
   return (
     <ContactProvider>
       <div className="relative">
@@ -29,6 +42,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/legal/:slug" element={<Legal />} />
         </Routes>
+
         <CTA />
         <Map />
         <Footer />
