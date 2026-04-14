@@ -26,22 +26,12 @@ const images = [
 
 export default function Facility() {
   return (
-    <div style={{ padding: "56.25% 0 0 0", position: "relative" }}>
-      <iframe
-        src="https://www.youtube.com/embed/4P8Sqrh-dF8?autoplay=1&loop=1&mute=1&playlist=4P8Sqrh-dF8&controls=0&modestbranding=1&playsinline=1"
-        frameBorder="0"
-        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-        }}
-        title="Greendog Academy Location"
-      ></iframe>
-    </div>
+    <iframe
+      src="https://www.youtube.com/embed/1z92SBiuyh8?autoplay=1&loop=1&mute=1&playlist=1z92SBiuyh8&controls=1&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3"
+      className="w-full aspect-video border-0"
+      allow="autoplay; fullscreen; picture-in-picture"
+      title="Greendog Academy Location"
+    />
   );
 
   return (
