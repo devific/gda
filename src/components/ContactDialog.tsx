@@ -15,10 +15,12 @@ export default function ContactDialog({ isOpen, onClose }: ContactDialogProps) {
     dogName: "",
     dogBreed: "",
     message: "",
+    company: "", // honeypot
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [startTime] = useState(Date.now());
 
   // Close on escape key
   useEffect(() => {
@@ -39,25 +41,60 @@ export default function ContactDialog({ isOpen, onClose }: ContactDialogProps) {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Separate core + extra fields — dogName and dogBreed go into extra_fields
+    const { name, email, phone, message, company, dogName, dogBreed } =
+      formData;
 
-    setIsSubmitting(false);
-    setIsSuccess(true);
-
-    // Reset after 3 seconds and close
-    setTimeout(() => {
-      setIsSuccess(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        dogName: "",
-        dogBreed: "",
-        message: "",
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({
+          data: {
+            name,
+            email,
+            phone,
+            message,
+            company, // honeypot — worker silently drops if filled
+            dogName,
+            dogBreed,
+          },
+          meta: {
+            startedAt: startTime,
+          },
+        }),
       });
-      onClose();
-    }, 3000);
+
+      const result = await res.json();
+
+      if (result.success) {
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            dogName: "",
+            dogBreed: "",
+            message: "",
+            company: "",
+          });
+          onClose();
+        }, 3000);
+      } else {
+        // Show worker error message in an alert — swap for a toast if your
+        // project has one set up
+        alert(result.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      alert("Network error. Please check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -239,6 +276,17 @@ export default function ContactDialog({ isOpen, onClose }: ContactDialogProps) {
                         placeholder="Tell us about your dog and your goals..."
                       />
                     </div>
+
+                    {/* Honeypot — hidden from real users, bots fill it */}
+                    <input
+                      type="text"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleChange}
+                      className="hidden"
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
 
                     <div className="pt-4">
                       <button
